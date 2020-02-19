@@ -56,19 +56,50 @@ window.addEventListener('DOMContentLoaded', () => {
             menu = document.querySelector('menu'),
             closebtn = document.querySelector('.close-btn'),
             menuItems = menu.querySelectorAll('ul>li');
+        
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
+        }
+
+        const animScrol = (elem) => {
+            let blockID = elem.getAttribute('href').substr(1);
+            document.getElementById(blockID).scrollIntoView({
+             behavior: 'smooth',
+             block: 'center'
+           })
         }
         
         btnMenu.addEventListener('click', handlerMenu);
         closebtn.addEventListener('click', handlerMenu);
 
         menuItems.forEach((elem) => {
-           elem.addEventListener('click', handlerMenu);
+           elem.addEventListener('click', (event) =>{ 
+                event.preventDefault();
+                let blockID = elem.children[0].getAttribute('href').substr(1);
+                document.getElementById(blockID).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                })
+                handlerMenu();
+            });
         });
     }
 
+    const animBtnScroll = () => {
+        const btnScroll = document.querySelector('a');
+        btnScroll.addEventListener('click', (event) => {
+            event.preventDefault();
+            let blockID = btnScroll.getAttribute('href').substr(1);
+            document.getElementById(blockID).scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            })
+        });
+
+    }
+
+    animBtnScroll();
     toggleMenu();
 
     //popup
