@@ -2,15 +2,26 @@ window.addEventListener('DOMContentLoaded', () => {
     'use strict';
 
     //Таймер
-    const countTimer = (deadLine) => {
+    const countTimer = () => {
         
 
         let timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
             timerSeconds = document.querySelector('#timer-seconds');
+
+        const deadLine = () => {
+            let today = new Date();
+            today.setDate(today.getDate()+1);
+            let tomorrow = today.toLocaleString('en', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+            }); 
+            return tomorrow;
+        };
          
         const getTimeRemaining = () => {
-            let dateStop = new Date(deadLine).getTime(),
+            let dateStop = new Date(deadLine()).getTime(),
             dateNow = new Date().getTime();
 
             let timeRemaining = (dateStop - dateNow) / 1000;
@@ -20,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 hours = Math.floor((timeRemaining / 60) / 60);
 
             return { timeRemaining, hours, minutes, seconds};
-        }
+        };
 
         const timeCheck = (value) => {
             if(value < 10){
@@ -40,15 +51,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 timerHours.textContent = '00';
                 timerMinutes.textContent = '00';
                 timerSeconds.textContent = '00';
-                console.log(1);
-                clearInterval(idInderval);
+                //clearInterval(idInderval);
             }
-        }
+        };
 
-        updateClock();
+        setInterval(updateClock, 1000);
     };
 
-    let idInderval = setInterval(countTimer, 1000, '16 february 2020');
+   countTimer();
 
     //Меню
     const toggleMenu = () => {
@@ -60,15 +70,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
-        }
-
-        const animScrol = (elem) => {
-            let blockID = elem.getAttribute('href').substr(1);
-            document.getElementById(blockID).scrollIntoView({
-             behavior: 'smooth',
-             block: 'center'
-           })
-        }
+        };
         
         btnMenu.addEventListener('click', handlerMenu);
         closebtn.addEventListener('click', handlerMenu);
@@ -80,11 +82,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 document.getElementById(blockID).scrollIntoView({
                     behavior: 'smooth',
                     block: 'center'
-                })
+                });
                 handlerMenu();
             });
         });
-    }
+    };
 
     const animBtnScroll = () => {
         const btnScroll = document.querySelector('a');
@@ -94,16 +96,15 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById(blockID).scrollIntoView({
                 behavior: 'smooth',
                 block: 'center'
-            })
+            });
         });
 
-    }
+    };
 
     animBtnScroll();
     toggleMenu();
 
     //popup
-
     const togglePopUp = () => {
         const popup = document.querySelector('.popup'),
             popubContainer = document.querySelector('.popup-content'),
@@ -129,13 +130,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 if(screen.width > 768){
                 animPopUp();
                 }
-            })
+            });
         });
 
         popUpClose.addEventListener('click', () => {
             popup.style.display = 'none';
-        })
-    }
+        });
+    };
 
     togglePopUp();
 });
