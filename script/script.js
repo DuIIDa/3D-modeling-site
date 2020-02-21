@@ -68,35 +68,34 @@ window.addEventListener('DOMContentLoaded', () => {
         };
 
         document.addEventListener('click', function add(event){
-            let temp = event.target;
-            temp = temp.closest('.active-menu');
-            if(temp && menu.classList.value === 'active-menu'){
-                let target = event.target;
-                if(target.classList.contains('close-btn')){
-                    document.removeEventListener('click', add);
-                    handlerMenu();
-                }else if(target.tagName === 'A'){
-                    event.preventDefault();
-                    let blockID = target.getAttribute('href').substr(1);
-                    document.getElementById(blockID).scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                    document.removeEventListener('click', add);
+            let target = event.target;
+            if(target.closest('.menu')){
+                 handlerMenu();
+            }else if(menu.classList.value === 'active-menu'){
+                let temp = event.target;
+                temp = temp.closest('.active-menu');
+                if(temp){
+                    let target = event.target;
+                    if(target.classList.contains('close-btn')){
+                        handlerMenu();
+                    }else if(target.tagName === 'A'){
+                        event.preventDefault();
+                        let blockID = target.getAttribute('href').substr(1);
+                        document.getElementById(blockID).scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                        handlerMenu();
+                    }
+                }else{
                     handlerMenu();
                 }
-                return;
-            }else if(!temp && menu.classList.value === 'active-menu'){
-                document.removeEventListener('click', add);
-                handlerMenu();
-                return;
             }
-            handlerMenu();
         });
     };
 
 
-    document.querySelector('.menu').addEventListener('click', toggleMenu);
+    toggleMenu();
 
     //Книпка скрола
     const animBtnScroll = () => {
@@ -192,4 +191,108 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     tabs();
+
+    //Cлайдер
+
+    const addDots = () => {
+        const portfilioDots = document.querySelector('.portfolio-dots');
+        const dotsQuantity = document.querySelectorAll('.portfolio-item').length;
+    
+        for(let i = 0; i < dotsQuantity; i++){
+            portfilioDots.insertAdjacentHTML('beforeEnd', `<li class="dot"></li>`);
+        }
+
+    };
+
+    addDots();
+
+    const slider = () => {
+        const slide = document.querySelectorAll('.portfolio-item'),
+            dot = document.querySelectorAll('.dot'),
+            slider = document.querySelector('.portfolio-content');
+        
+        let currentSlide = 0,
+            interval;
+
+        const prevSlide = (elem, index, strClass) => {
+           elem[index].classList.remove(strClass);
+        };
+
+        const nextSlide = (elem, index, strClass) => {
+            elem[index].classList.add(strClass);
+        };
+
+        const autoPlaySlide = () => {
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot,currentSlide,'dot-active');
+            currentSlide++;
+            if(currentSlide >= slide.length){
+                currentSlide = 0;
+            }
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot,currentSlide,'dot-active');
+        };
+
+        const startSlide = () => {
+            interval = setInterval(autoPlaySlide, 4000);
+        };
+
+        const stopSlide = () => {
+            clearInterval(interval);
+        };
+
+        slider.addEventListener('click', (event) => {
+            event.preventDefault();
+            
+            let target = event.target;
+
+            if(!target.matches('#arrow-right, #arrow-left, .dot')){
+                return;
+            }
+
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot,currentSlide,'dot-active');
+
+            if(target.matches('#arrow-right')){
+                currentSlide++;
+            }else if(target.matches('#arrow-left')){
+                currentSlide--;
+            }else if(target.matches('.dot')){
+                dot.forEach((elem,i) => {
+                    if(elem === target){
+                        currentSlide = i;
+                    }
+                });
+            }
+
+            if(currentSlide >= slide.length){
+                currentSlide = 0;
+            }else if(currentSlide < 0){
+                currentSlide = slide.length - 1;
+            }
+
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot,currentSlide,'dot-active');
+
+        });
+
+        slider.addEventListener('mouseover', (event) => {
+            if(event.target.matches('.portfolio-btn') || 
+            event.target.matches('.dot')){
+               stopSlide(); 
+            }
+        });
+
+        slider.addEventListener('mouseout', (event) => {
+            if(event.target.matches('.portfolio-btn') || 
+            event.target.matches('.dot')){
+               startSlide(); 
+            }
+        });
+
+        startSlide();
+
+    };
+
+    slider();
 });
