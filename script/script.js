@@ -199,7 +199,11 @@ window.addEventListener('DOMContentLoaded', () => {
         const dotsQuantity = document.querySelectorAll('.portfolio-item').length;
     
         for(let i = 0; i < dotsQuantity; i++){
-            portfilioDots.insertAdjacentHTML('beforeEnd', `<li class="dot"></li>`);
+            if(i === 0){
+                portfilioDots.insertAdjacentHTML('beforeEnd', `<li class="dot dot-active"></li>`);
+            }else {
+                portfilioDots.insertAdjacentHTML('beforeEnd', `<li class="dot"></li>`);
+            }
         }
 
     };
@@ -295,4 +299,53 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     slider();
+
+    //Расчитать стоимость
+
+    const totalArea = document.querySelector('.calc-square');
+    const numberPremises = document.querySelector('.calc-count');
+    const term = document.querySelector('.calc-day');
+
+    const checkNumb = (value) => {
+        value.value = value.value.replace(/[^\d]/g, '');
+    };
+
+    totalArea.addEventListener('input', (event) => {
+        checkNumb(event.target);
+    });
+
+    numberPremises.addEventListener('input', (event) => {
+        checkNumb(event.target);
+    });
+
+    term.addEventListener('input', () => {
+        checkNumb(event.target);
+    });
+    
+
+    //Наша команда
+
+    let firstImg;
+
+    const mouseAction = document.querySelectorAll('.row');
+    mouseAction[8].addEventListener('mouseover', (event) => {
+        let target = event.target;
+        if(target.classList.contains('command__photo')){
+            firstImg =  target.src;
+            target.src = target.dataset.img;
+        }
+
+    });
+
+    mouseAction[8].addEventListener('mouseout', (event) => {
+        let target = event.target;
+        if(target.classList.contains('command__photo')){
+            target.src = firstImg;
+        }
+        
+
+    });
+
+
+
 });
