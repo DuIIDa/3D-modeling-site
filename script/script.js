@@ -1,5 +1,8 @@
+
 window.addEventListener('DOMContentLoaded', () => {
     'use strict';
+
+    
 
     //Таймер
     const countTimer = () => {
@@ -142,7 +145,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         popup.addEventListener('click', (event) => {
             let target = event.target;
-            if(target.classList.contains('popup-close')){
+            if(target.classList.contains('popup-close') || target.classList.contains('btn')){
                 popup.style.display = 'none';
             }else{
                 target = target.closest('.popup-content');
@@ -450,8 +453,8 @@ window.addEventListener('DOMContentLoaded', () => {
             selector: '#form2',
             pattern: {
                 phone: /^\+375( )?(( )?\d){9}$/,
-                name: /[а-яА-ЯёЁ]+/,
-                message: /[а-яА-ЯёЁ]+/
+                name: /^[а-яА-ЯёЁ]+$/,
+                message: /^[а-яА-ЯёЁ0-9 ]+$/
             },
             method: {
             'form2-phone': [

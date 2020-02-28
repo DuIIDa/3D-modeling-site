@@ -1,5 +1,4 @@
 'use strict';
-
 class Validator {
     constructor({selector, pattern = {}, method}){
         this.form = document.querySelector(selector);
@@ -56,16 +55,23 @@ class Validator {
 
                 const messagePost = () => {
 
+                    this.elementsForm.forEach(elem => {
+                        elem.value = '';
+                        elem.classList.remove('success');
+                    });
+                    
                     if(statusMessage){
                         this.form.removeChild(statusMessage);
                     }else{
                         statusMessage = document.createElement('div');
                         statusMessage.style.cssText = 'font-size: 2rem';
                     }
+
                     this.form.appendChild(statusMessage);
                     statusMessage.textContent = loadMessage;
 
                     const formData = new FormData(this.form);
+                    
                     let body ={};
                     for(let val of formData.entries()){
                         body[val[0]] = val[1];
@@ -159,7 +165,7 @@ class Validator {
             this.pattern.phone = /^\+?[78]([-()]*\d){10}$/;
         }
         if(!this.pattern.email){
-            this.pattern.email = /^\w+@\w+\.\w{2,}$/;
+            this.pattern.email = /^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/;
         }
     }
 }
