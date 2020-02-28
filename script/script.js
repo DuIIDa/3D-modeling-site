@@ -402,58 +402,80 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Send-ajax=form
     const sendForm = () => {
-        const errorMessage = 'Что-то пошло не так';
-        const loadMessage = 'Загрузка...';
-        const successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
-
-        const form = document.getElementById('form1');
-
-        const statusMessage = document.createElement('div');
-        statusMessage.style.cssText = 'font-size: 2rem';
-     
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-        
-            request.addEventListener('readystatechange', () => {
-                if(request.readyState !== 4){
-                    return;
-                }
-                if(request.status === 200){
-                    outputData();
-                }else{
-                    errorData(request.status);
-                }
-            });
-
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            
-            request.send(JSON.stringify(body));
-
-        };
-        
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            form.appendChild(statusMessage);
-            
-            statusMessage.textContent = loadMessage;
-
-            const formData = new FormData(form);
-            let body ={};
-
-            for(let val of formData.entries()){
-                body[val[0]] = val[1];
-            }
-            console.log(body);
-
-            postData(body, () => {
-                statusMessage.textContent = successMessage;
-            }, (error) => {
-                statusMessage.textContent = errorMessage;
-                console.error(error);
-            });
-           
+        const valid = new Validator({
+            selector: '#form1',
+            pattern: {
+                phone: /^\+375( )?(( )?\d){9}$/,
+                name: /[а-яА-ЯёЁ]+/
+            },
+            method: {
+            'form1-phone': [
+                ['notEmpty'],
+                ['pattern', 'phone']
+            ],
+            'form1-email': [
+                ['notEmpty'],
+                ['pattern', 'email']
+            ],
+            'form1-name': [
+                ['notEmpty'],
+                ['pattern', 'name']
+            ]
+        }
         });
+
+        const validModel = new Validator({
+            selector: '#form3',
+            pattern: {
+                phone: /^\+375( )?(( )?\d){9}$/,
+                name: /[а-яА-ЯёЁ]+/
+            },
+            method: {
+            'form3-phone': [
+                ['notEmpty'],
+                ['pattern', 'phone']
+            ],
+            'form3-email': [
+                ['notEmpty'],
+                ['pattern', 'email']
+            ],
+            'form3-name': [
+                ['notEmpty'],
+                ['pattern', 'name']
+            ]
+        }
+        });
+
+        const validForm2 = new Validator({
+            selector: '#form2',
+            pattern: {
+                phone: /^\+375( )?(( )?\d){9}$/,
+                name: /[а-яА-ЯёЁ]+/,
+                message: /[а-яА-ЯёЁ]+/
+            },
+            method: {
+            'form2-phone': [
+                ['notEmpty'],
+                ['pattern', 'phone']
+            ],
+            'form2-email': [
+                ['notEmpty'],
+                ['pattern', 'email']
+            ],
+            'form2-name': [
+                ['notEmpty'],
+                ['pattern', 'name']
+            ],
+            'form2-message': [
+                ['notEmpty'],
+                ['pattern', 'message']
+            ]
+        }
+        });
+
+        valid.init();
+        validModel.init();
+        validForm2.init();
     };
     sendForm();
 

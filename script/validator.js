@@ -14,23 +14,80 @@ class Validator {
     }
 
     init(){
+        let statusMessage;
+        const errorMessage = 'Что-то пошло не так';
+        const loadMessage = 'Загрузка...';
+        const successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
         this.applyStyle();
         this.setPattern();
         this.elementsForm.forEach((elem) => {
             elem.addEventListener('change', this.checkIt.bind(this));
         });
         this.form.addEventListener('submit', e => {
+            event.preventDefault();
+
             this.elementsForm.forEach(elem => {
                 this.checkIt({target: elem});
             });
             if(this.error.size){
-                e.preventDefault();
+                return;
+            }else{
+
+                const postData = (body, outputData, errorData) => {
+                    const request = new XMLHttpRequest();
+                
+                    request.addEventListener('readystatechange', () => {
+                        if(request.readyState !== 4){
+                            return;
+                        }
+                        if(request.status === 200){
+                            outputData();
+                        }else{
+                            errorData(request.status);
+                        }
+                    });
+        
+                    request.open('POST', './server.php');
+                    request.setRequestHeader('Content-Type', 'application/json');
+                    request.send(JSON.stringify(body));
+        
+                };
+
+                const messagePost = () => {
+
+                    if(statusMessage){
+                        this.form.removeChild(statusMessage);
+                    }else{
+                        statusMessage = document.createElement('div');
+                        statusMessage.style.cssText = 'font-size: 2rem';
+                    }
+                    this.form.appendChild(statusMessage);
+                    statusMessage.textContent = loadMessage;
+
+                    const formData = new FormData(this.form);
+                    let body ={};
+                    for(let val of formData.entries()){
+                        body[val[0]] = val[1];
+                    }
+            
+                    postData(body, () => {
+                        statusMessage.textContent = successMessage;
+                    }, (error) => {
+                        statusMessage.textContent = errorMessage;
+                        console.error(error);
+                    });
+    
+                };
+
+                messagePost();
+   
             }
         });
     }
 
     isValid(elem){
-        const valudatorMathod ={
+        const valudatorMathod = {
             notEmpty(elem){
                 if(elem.value.trim() === ''){
                     return false;
@@ -43,7 +100,6 @@ class Validator {
         };
         if(this.method){
             const method = this.method[elem.id];
-
             if(method) {
                 return method.every(item => {
                     return  valudatorMathod[item[0]](elem, this.pattern[item[1]]);
@@ -73,11 +129,6 @@ class Validator {
         if(elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')){
            return;
         }
-        const errorDiv = document.createElement('div');
-        errorDiv.textContent = 'Ошибка в этом поле';
-        errorDiv.classList.add('validator-error');
-        elem.insertAdjacentElement('afterend', errorDiv);
-
     }
 
     showSucces(elem){
@@ -92,15 +143,12 @@ class Validator {
         const style = document.createElement('style');
         style.textContent =`
             input.success {
-                border: 2px solid green;
+                outline: 0;
+                box-shadow: inset 0 3px 3px rgba(52,201,36), 0 0 15px rgba(52, 201, 36, .6);
             }
             input.error {
-                border: 2px solid red;
-            }
-            .validator-error {
-                font-size: 12px;
-                font-family: sans-serif;
-                color: red;
+                outline: 0;
+                box-shadow: inset 0 3px 3px rgba(255,0,0), 0 0 15px rgba(255, 0, 0, .6);
             }
         `;
         document.head.appendChild(style);

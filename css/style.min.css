@@ -190,7 +190,7 @@ body .main-form input {
     height: 5rem;
     border-radius: 5rem;
     font-size: 1.3rem;
-    border: none;
+    border: 0;
     padding-left: 2.7rem;
     color: #000
 }
