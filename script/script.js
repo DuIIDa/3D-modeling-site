@@ -351,7 +351,7 @@ window.addEventListener('DOMContentLoaded', () => {
             target.matches('.calc-count') || target.matches('.calc-day')) {
                 countSum();
             }
-        })
+        });
     
         const checkNumb = (value) => {
             value.value = value.value.replace(/[^\d]/g, '');
@@ -371,29 +371,91 @@ window.addEventListener('DOMContentLoaded', () => {
         
     };
     calc(100);
+
     //Наша команда
+    const comand = () => {
 
-    let firstImg;
-
-    const mouseAction = document.querySelectorAll('.row');
-    mouseAction[8].addEventListener('mouseover', (event) => {
-        let target = event.target;
-        if(target.classList.contains('command__photo')){
-            firstImg =  target.src;
-            target.src = target.dataset.img;
-        }
-
-    });
-
-    mouseAction[8].addEventListener('mouseout', (event) => {
-        let target = event.target;
-        if(target.classList.contains('command__photo')){
-            target.src = firstImg;
-        }
         
+        let firstImg;
 
-    });
+        const mouseAction = document.querySelectorAll('.row');
+        mouseAction[8].addEventListener('mouseover', (event) => {
+            let target = event.target;
+            if(target.classList.contains('command__photo')){
+                firstImg =  target.src;
+                target.src = target.dataset.img;
+            }
 
+        });
+
+        mouseAction[8].addEventListener('mouseout', (event) => {
+            let target = event.target;
+            if(target.classList.contains('command__photo')){
+                target.src = firstImg;
+            }
+            
+
+        });
+    };
+
+    comand();
+
+    //Send-ajax=form
+    const sendForm = () => {
+        const errorMessage = 'Что-то пошло не так';
+        const loadMessage = 'Загрузка...';
+        const successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+        const form = document.getElementById('form1');
+
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem';
+     
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+        
+            request.addEventListener('readystatechange', () => {
+                if(request.readyState !== 4){
+                    return;
+                }
+                if(request.status === 200){
+                    outputData();
+                }else{
+                    errorData(request.status);
+                }
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            
+            request.send(JSON.stringify(body));
+
+        };
+        
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            
+            statusMessage.textContent = loadMessage;
+
+            const formData = new FormData(form);
+            let body ={};
+
+            for(let val of formData.entries()){
+                body[val[0]] = val[1];
+            }
+            console.log(body);
+
+            postData(body, () => {
+                statusMessage.textContent = successMessage;
+            }, (error) => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+            });
+           
+        });
+    };
+    sendForm();
 
 
 });
