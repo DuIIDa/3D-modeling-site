@@ -409,7 +409,7 @@ window.addEventListener('DOMContentLoaded', () => {
             selector: '#form1',
             pattern: {
                 phone: /^\+375( )?(( )?\d){9}$/,
-                name: /[а-яА-ЯёЁ]+/
+                name: /^[а-яА-ЯёЁ]+$/
             },
             method: {
             'form1-phone': [
@@ -431,7 +431,7 @@ window.addEventListener('DOMContentLoaded', () => {
             selector: '#form3',
             pattern: {
                 phone: /^\+375( )?(( )?\d){9}$/,
-                name: /[а-яА-ЯёЁ]+/
+                name: /^[а-яА-ЯёЁ]+$/
             },
             method: {
             'form3-phone': [

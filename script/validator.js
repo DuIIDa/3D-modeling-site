@@ -33,33 +33,28 @@ class Validator {
                 return;
             }else{
 
-                const postData = (body, outputData, errorData) => {
+                const postData = (body) => {
+                    console.log('body: ', body);
                     const request = new XMLHttpRequest();
-                
-                    request.addEventListener('readystatechange', () => {
-                        if(request.readyState !== 4){
-                            return;
-                        }
-                        if(request.status === 200){
-                            outputData();
-                        }else{
-                            errorData(request.status);
-                        }
-                    });
-        
                     request.open('POST', './server.php');
-                    request.setRequestHeader('Content-Type', 'application/json');
-                    request.send(JSON.stringify(body));
-        
+                
+                    return new Promise ((resolve,reject) => {
+                        request.addEventListener('readystatechange', () => {
+                            if(request.readyState !== 4){
+                                return;
+                            }
+                            if(request.status === 200){
+                                resolve();
+                            }else{
+                                reject(request.status);
+                            }
+                        });
+                        request.setRequestHeader('Content-Type', 'application/json');
+                        request.send(JSON.stringify(body));
+                    });
                 };
 
                 const messagePost = () => {
-
-                    this.elementsForm.forEach(elem => {
-                        elem.value = '';
-                        elem.classList.remove('success');
-                    });
-                    
                     if(statusMessage){
                         this.form.removeChild(statusMessage);
                     }else{
@@ -77,11 +72,17 @@ class Validator {
                         body[val[0]] = val[1];
                     }
             
-                    postData(body, () => {
-                        statusMessage.textContent = successMessage;
-                    }, (error) => {
-                        statusMessage.textContent = errorMessage;
-                        console.error(error);
+                    postData(body)
+                        .then(() => {
+                            statusMessage.textContent = successMessage;})               
+                        .catch((error) => {
+                            statusMessage.textContent = errorMessage;
+                            console.error(error);
+                    });
+                    
+                    this.elementsForm.forEach(elem => {
+                        elem.value = '';
+                        elem.classList.remove('success');
                     });
     
                 };
