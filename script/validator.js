@@ -15,7 +15,6 @@ class Validator {
     init(){
         let statusMessage;
         const errorMessage = 'Что-то пошло не так';
-        const loadMessage = 'Загрузка...';
         const successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
         this.applyStyle();
@@ -33,8 +32,16 @@ class Validator {
                 return;
             }else{
 
-                const postData = (body) => {
-                    const request = new XMLHttpRequest();
+                const postData = (formData) => {
+                    return fetch('./server.php',{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: formData
+                    });
+
+                    /*const request = new XMLHttpRequest();
                     request.open('POST', './server.php');
                     return new Promise ((resolve,reject) => {
                         request.addEventListener('readystatechange', () => {
@@ -49,7 +56,7 @@ class Validator {
                         });
                         request.setRequestHeader('Content-Type', 'application/json');
                         request.send(JSON.stringify(body));
-                    });
+                    });*/
                 };
 
                 const messagePost = () => {
@@ -70,14 +77,13 @@ class Validator {
 
                     const formData = new FormData(this.form);
                     
-                    let body ={};
-                    for(let val of formData.entries()){
-                        body[val[0]] = val[1];
-                    }
-            
-                    postData(body)
-                        .then(() => {
-                            statusMessage.textContent = successMessage;})               
+                    postData(formData)
+                        .then((response) => {
+                            if(response.status !== 200){
+                                throw new Error('Status network not 200');
+                            }
+                            statusMessage.textContent = successMessage;
+                        })               
                         .catch((error) => {
                             statusMessage.textContent = errorMessage;
                             console.error(error);
