@@ -34,10 +34,8 @@ class Validator {
             }else{
 
                 const postData = (body) => {
-                    console.log('body: ', body);
                     const request = new XMLHttpRequest();
                     request.open('POST', './server.php');
-                
                     return new Promise ((resolve,reject) => {
                         request.addEventListener('readystatechange', () => {
                             if(request.readyState !== 4){
@@ -63,7 +61,12 @@ class Validator {
                     }
 
                     this.form.appendChild(statusMessage);
-                    statusMessage.textContent = loadMessage;
+                    statusMessage.innerHTML = `<div class="spinner">
+                    <div class="spinner-circle spinner-circle-outer"></div>
+                    <div class="spinner-circle-off spinner-circle-inner"></div>
+                    <div class="spinner-circle spinner-circle-single-1"></div>
+                    <div class="spinner-circle spinner-circle-single-2"></div>
+                    </div>`;
 
                     const formData = new FormData(this.form);
                     
