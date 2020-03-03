@@ -48,7 +48,7 @@ const sendForm = () => {
         pattern: {
             phone: /^\+375( )?(( )?\d){9}$/,
             name: /^[а-яА-ЯёЁ]+$/,
-            message: /^[а-яА-ЯёЁ0-9 ]+$/
+            message: /^[а-яА-ЯёЁ0-9 ,.\-:;"']+$/
         },
         method: {
         'form2-phone': [
