@@ -79,6 +79,7 @@ class Validator {
                     
                     postData(formData)
                         .then((response) => {
+                            console.log('response: ', response);
                             if(response.status !== 200){
                                 throw new Error('Status network not 200');
                             }
