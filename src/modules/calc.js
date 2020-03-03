@@ -18,9 +18,9 @@ const calc = (price = 100) => {
             countValue += (calcCount.value - 1) / 10;
         }
 
-        if(calcDay.value < 5 && calcDay.value) {
+        if(calcDay.value < 5 && calcDay.value > 0 && calcDay.value) {
             dayValue *= 2;
-        }else if(calcDay.value < 10 && calcDay.value) {
+        }else if(calcDay.value < 10 && calcDay.value && calcDay.value > 0) {
             dayValue *= 1.5;
         }
 
