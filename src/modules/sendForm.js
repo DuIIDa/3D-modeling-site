@@ -2,7 +2,7 @@ const sendForm = () => {
     const valid = new Validator({
         selector: '#form1',
         pattern: {
-            phone: /^\+375( )?(( )?\d){9}$/,
+            phone: /^\+375( )?(( )?\d){9}$|^\+?[78]([-()]*\d){10}$/,
             name: /^[а-яА-ЯёЁ]+$/
         },
         method: {
@@ -24,7 +24,7 @@ const sendForm = () => {
     const validModel = new Validator({
         selector: '#form3',
         pattern: {
-            phone: /^\+375( )?(( )?\d){9}$/,
+            phone: /^\+375( )?(( )?\d){9}$|^\+?[78]([-()]*\d){10}$/,
             name: /^[а-яА-ЯёЁ]+$/
         },
         method: {
@@ -46,7 +46,7 @@ const sendForm = () => {
     const validForm2 = new Validator({
         selector: '#form2',
         pattern: {
-            phone: /^\+375( )?(( )?\d){9}$/,
+            phone: /^\+375( )?(( )?\d){9}$|^\+?[78]([-()]*\d){10}$/,
             name: /^[а-яА-ЯёЁ]+$/,
             message: /^[а-яА-ЯёЁ0-9 ,.\-:;"']+$/
         },

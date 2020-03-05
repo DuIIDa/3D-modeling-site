@@ -7,7 +7,8 @@ const calc = (price = 100) => {
         calcDay = document.querySelector('.calc-day'),
         totalValue = document.getElementById('total');
 
-    const countSum = () => {
+    let id;
+    const countSum = (remInterval) => {
         let total = 0,
         countValue = 1,
         dayValue = 1;
@@ -27,12 +28,12 @@ const calc = (price = 100) => {
         if(typeValue && squareValue){
             total = price * typeValue * squareValue * countValue * dayValue;
             let temp = 0;
-            let id = setInterval(() => {
-                temp += 10;
+            id = setInterval(() => {
+                temp += 100;
                 if(temp <= total){
                 totalValue.textContent = temp;
                 }else{
-                    clearInterval(id);
+                    clearInterval(remInterval);
                 }
             }, 1);
         }else{
@@ -46,7 +47,9 @@ const calc = (price = 100) => {
 
         if(target.matches('.calc-type') || target.matches('.calc-square') || 
         target.matches('.calc-count') || target.matches('.calc-day')) {
-            countSum();
+            clearInterval(id);
+            totalValue.textContent = 0;
+            countSum(id);
         }
     });
 
